@@ -1,0 +1,35 @@
+//.o365sx-navbar {
+    background-color: #2564cf;
+    background-position: left top;
+    background-repeat-x: repeat;
+    background-image: none;
+    height: 48px;
+    }
+button{
+    white: 48px;
+    height: 48px;
+}
+search{
+    white: 400px;
+    height: 32px
+}
+background-color: #f3f2f1;
+//header
+<i class="fa-regular fa-magnifying-glass"></i>
+<i class="fa-regular fa-gear"></i>
+<i class="fa-regular fa-question"></i>
+<i class="fa-regular fa-bullhorn"></i>
+//sidebar
+<i class="fa-solid fa-bars"></i>
+<i class="fa-solid fa-sun-bright"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-calendar-days"></i>
+<i class="fa-solid fa-user"></i>
+<i class="fa-brands fa-font-awesome"></i>
+<i class="fa-solid fa-house"></i>
+<i class="fa-solid fa-plus"></i>
+
+<i class="fa-solid fa-envelope"></i>
+<i class="fa-solid fa-calendar-days"></i>
+<i class="fa-solid fa-user-group"></i>
+<i class="fa-solid fa-check"></i>
