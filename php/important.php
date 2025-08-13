@@ -18,8 +18,8 @@
   color: #2564cf; /* Varsayılan gri */
 }
 
-.column-top-left button,
-.column-top-right button {
+.column-top-left button,span,
+.column-top-right button,span {
   color: #2564cf;
   font-size: 14px;
 }
