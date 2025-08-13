@@ -413,7 +413,7 @@ nav i{
 /* Başlık satırı */
 .grid-container-header ul {
     display: grid;
-    grid-template-columns: 40px 0.5fr 150px 150px 150px 80px;  /* Updated column sizes */
+    grid-template-columns: 75px 1fr 150px 150px 150px 75px;  /* Updated column sizes */
     list-style: none;
     padding: 10px 15px;
     margin: 0;
@@ -432,7 +432,7 @@ nav i{
 /* Satırlar */
 .grid ul {
     display: grid;
-    grid-template-columns: 40px 0.5fr 150px 150px 150px 80px;/* Updated column sizes */
+    grid-template-columns: 75px 1fr 150px 150px 150px 75px;/* Updated column sizes */
     list-style: none;
     padding: 10px 15px;
     margin: 0;

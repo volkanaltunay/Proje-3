@@ -39,7 +39,7 @@ try {
     <div class="column-top">
         <div class="column-top-left">
             <ul>
-                <li><button><i class="fa-regular fa-sun"></i><span class="title">Günüm</span></button></li>
+                <li><button><i class="fa-solid fa-list"></i><span class="title">Kategori</span></button></li>
                 <li><button><i class="fa-solid fa-ellipsis"></i></button></li>
                 <li><button><i class="fa-solid fa-table-cells-large"></i><span>Tablo</span></button></li>
                 <li><button><i class="fa-solid fa-bars-staggered"></i><span>Liste</span></button></li>
@@ -48,16 +48,14 @@ try {
         <div class="column-top-right">
             <ul>
                 <li><button><i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span></button></li>
-                <li><button><i class="fa-solid fa-layer-group"></i><span>Grup</span></button></li>
-                <li><button><i class="fa-regular fa-lightbulb"></i><span>Öneriler</span></button></li>
             </ul>
         </div>
-        <div class="column-top-left-date">
+        <!-- <div class="column-top-left-date">
             <span class="date"><?php echo date('d F Y'); ?></span>
-        </div>
+        </div> -->
     </div>
     <div class="column-bottom">
-        <form id="taskForm" action="php/myday.php" method="post">
+        <!-- <form id="taskForm" action="php/myday.php" method="post">
             <div class="add-Task">
                 <div class="add-TaskNew">
                     <button type="button">
@@ -78,7 +76,7 @@ try {
                     <button type="submit" aria-label="Ekle">Ekle</button>
                 </div>
             </div>
-        </form>
+        </form> -->
         
 <div class="grid-wiew">
     <div class="grid-wiew-container">
@@ -147,7 +145,7 @@ try {
                     $('#task-input').val('');
                     
                     // Görev listesini yeniden yükle
-                    $('#content-area').load('php/myday.php');
+                    $('#content-area').load('php/important.php');
                 },
                 error: function(xhr, status, error) {
                     toastr.error('Görev eklenirken bir hata oluştu: ' + error);
