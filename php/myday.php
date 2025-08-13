@@ -1,5 +1,36 @@
 <?php
-// PHP kodları burada çalıştırılabilir.
+
+require 'database.php';
+
+$database = new Database();
+$db = $database->getConnection();
+
+// --- POST isteği geldiyse (ekleme işlemi) ---
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $title = $_POST['title'];
+
+    if (!empty($title)) {
+        try {
+            $query = "INSERT INTO tasks (title) VALUES (:title)";
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':title', $title);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Ekleme hatası: " . $e->getMessage();
+        }
+    }
+}
+
+// --- Tüm görevleri (tasks) veritabanından çekme ---
+$tasks = [];
+try {
+    $query = "SELECT id, title, status FROM tasks WHERE deleted_at IS NULL ORDER BY created_at DESC";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Listeleme hatası: " . $e->getMessage();
+}
 
 ?>
 <!DOCTYPE html>
@@ -63,43 +94,45 @@
               </li>
             </ul>
           </div>
-          <div class="column-top-left-date">
-            <span class="date">13 Ağustos Çarşamba</span>
-          </div>
+            <div class="column-top-left-date">
+                <span class="date"><?php echo date('d F Y'); ?></span>
+            </div>
         </div>
+        
         <div class="column-bottom">
-          <div class="add-Task">
-            <div class="add-TaskNew">
-              <button>
-                <i class="fa-regular fa-circle"></i>
-              </button>
-              <input type="text" placeholder="Görev Ekle">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <div class="add-Task">
+                    <div class="add-TaskNew">
+                        <button type="button">
+                            <i class="fa-regular fa-circle"></i>
+                        </button>
+                        <input type="text" name="title" id="task-input" placeholder="Görev Ekle">
+                    </div>
+                </div>
+                <div class="taskCreation">
+                    <div class="taskCreation-entrybar-left">
+                        </div>
+                    <div class="taskCreation-entrybar-right">
+                        <button type="submit" aria-label="Ekle">Ekle</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="task-list">
+                <h3>Bekleyen Görevler</h3>
+                <?php if (empty($tasks)): ?>
+                    <p>Henüz eklenmiş bir görev yok.</p>
+                <?php else: ?>
+                    <ul>
+                        <?php foreach ($tasks as $task): ?>
+                            <li>
+                                <input type="checkbox" <?php echo ($task['status'] === 'completed') ? 'checked' : ''; ?>>
+                                <span><?php echo htmlspecialchars($task['title']); ?></span>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
-          </div>
-          <div class="taskCreation">
-            <div class="taskCreation-entrybar-left">
-              <ul>
-                <li>
-                <button>
-                  <i class="fa-solid fa-calendar-days"></i>
-                </button>
-                </li>
-                <li>
-                  <button>
-                    <i class="fa-solid fa-bell"></i>
-                  </button>
-                </li>
-                <li>
-                  <button>
-                    <i class="fa-solid fa-repeat"></i>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div class="taskCreation-entrybar-right">
-              <button aria-label="Ekle">Ekle</button>
-            </div>
-          </div>
         </div>
       </section>
     </main>

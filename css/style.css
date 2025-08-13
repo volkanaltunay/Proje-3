@@ -299,7 +299,7 @@ nav i{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #fff;
+  background: #e1e1e1;
   border-radius: 5px;
   padding: 8px;
 }
@@ -318,8 +318,8 @@ nav i{
 }
 
 .taskCreation-entrybar-right button {
-  background: #2564cf;
-  color: white;
+  background: #fff;
+  color: #444;
   padding: 6px 12px;
   border-radius: 5px;
   font-size: 14px;
@@ -379,11 +379,11 @@ nav i{
 }
 
 /* Ekle butonu */
-.taskCreation-entrybar-right button {
-  background: #2564cf;
-  color: #fff;
+/* .taskCreation-entrybar-right button {
+  background: #fff;
+  color: #444;
   font-weight: 500;
-}
+} */
 
 .taskCreation-entrybar-right button:hover {
   background: #1b4faf;
