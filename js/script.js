@@ -1,73 +1,44 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const taskInput = document.querySelector(".add-TaskNew input");
-    const addButton = document.querySelector(".taskCreation-entrybar-right button");
-    const gridContainer = document.querySelector(".grid-wiew-container");
+    const toggleBtn = document.getElementById("toggle-btn");
+    const sidebar = document.getElementById("sidebar");
+    const links = document.querySelectorAll('#sidebar a[data-page]');
+    const contentArea = document.getElementById("content-area");
 
-    // LocalStorage'dan görevleri yükle
-    loadTasks();
+    // Menü aç/kapa
+    toggleBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        sidebar.classList.toggle("collapsed");
+    });
 
-    // Görev ekleme butonuna tıklanınca
-addButton.addEventListener("click", function () {
-    const taskName = taskInput.value.trim();
-    if (taskName === "") {
-        toastr.warning("Lütfen bir görev adı girin");
-        return;
-    }
+    // Menüye tıklayınca içerik yükle
+    links.forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const pageUrl = this.getAttribute("data-page");
 
-    fetch("myday.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "title=" + encodeURIComponent(taskName)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            addTaskRow(data.task);
-            toastr.success("Görev eklendi");
-        } else {
-            toastr.error("Görev eklenemedi");
-        }
+            fetch(pageUrl)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Sunucu hatası: ${res.status}`);
+                    }
+                    return res.text();
+                })
+                .then(html => {
+                    contentArea.innerHTML = html;
+                    // Eğer toastr tanımlıysa çalışacak
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success("Sayfa başarıyla yüklendi");
+                    }
+                })
+                .catch(err => {
+                    // Eğer toastr tanımlıysa çalışacak
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error("Sayfa yüklenirken bir hata oluştu");
+                    }
+                    console.error(err);
+                });
+        });
     });
 });
-
-
-    // Görev satırı oluşturma
-    function addTaskRow(task) {
-        const newRow = document.createElement("div");
-        newRow.classList.add("grid");
-        newRow.innerHTML = `
-            <ul>
-                <li>
-                  <button class="completed"><i class="fa-regular fa-circle"></i></button>
-                </li>
-                <li><span class="title">${task.title}</span></li>
-                <li><span class="date">${task.date}</span></li>
-                <li><span class="importance"><i class="fa-solid fa-star ${task.importance ? 'active' : ''}"></i></span></li>
-            </ul>
-        `;
-        gridContainer.appendChild(newRow);
-    }
-
-    // Görevleri localStorage'a kaydet
-    function saveTask(task) {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        tasks.push(task);
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
-
-    // localStorage'dan görevleri yükle
-    function loadTasks() {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        tasks.forEach(task => addTaskRow(task));
-    }
-
-    // Bugünün tarihini döndür
-    function getTodayDate() {
-        const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-        const today = new Date();
-        return today.getDate() + " " + months[today.getMonth()] + " " + today.getFullYear();
-    }
-});
-
 
 

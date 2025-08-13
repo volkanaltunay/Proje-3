@@ -9,6 +9,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    #content-area {
+  margin-left: 150px;
+  transition: margin-left 0.3s ease;
+}
+#content-area i {
+  color: #2564cf; /* Varsayılan gri */
+}
+
+.column-top-left button,
+.column-top-right button {
+  color: #2564cf;
+  font-size: 14px;
+}
+</style>
 <body>
         <main id="content-area">
       <section center-column>
