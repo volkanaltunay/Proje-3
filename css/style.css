@@ -397,5 +397,81 @@ nav i{
 .taskCreation-entrybar-left button:hover i {
   color: #2564cf;
 }
+/* Grid görünümü ana alan */
+.grid-wiew {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+/* Konteyner */
+.grid-wiew-container {
+  padding: 0;
+}
+
+/* Başlık satırı */
+.grid-container-header ul {
+  display: grid;
+  grid-template-columns: 40px 1fr 150px 150px;
+  list-style: none;
+  padding: 10px 15px;
+  margin: 0;
+  border-bottom: 1px solid #ddd;
+  background: #faf9f8;
+  font-weight: 500;
+  color: #323130;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.grid-container-header li {
+  display: flex;
+  align-items: center;
+}
+
+/* Satırlar */
+.grid ul {
+  display: grid;
+  grid-template-columns: 40px 1fr 150px 150px;
+  list-style: none;
+  padding: 10px 15px;
+  margin: 0;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.grid li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #323130;
+}
+
+/* Görev tamamla butonu */
+.grid .completed {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #5e5e5e;
+}
+
+.grid .completed:hover {
+  color: #2564cf;
+}
+
+/* Önem derecesi ikonu */
+.grid .importance i {
+  color: #ccc;
+}
+
+.grid .importance i:hover {
+  color: #f5c518;
+}
+
+/* Hover efekti */
+.grid:hover {
+  background: #f3f2f1;
+}
 
 
