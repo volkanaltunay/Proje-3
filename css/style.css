@@ -208,5 +208,194 @@ nav i{
 #sidebar.collapsed + #content-area {
   margin-left: 45px; /* Sidebar çöktüğünde boşluğu küçültün */
 }
+/* İçerik alanı üst bar */
+#content-area {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background-color: #f3f2f1;
+  height: calc(100vh - 48px); /* Header hariç */
+}
+
+/* Üst kısım */
+.column-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.column-top-left ul,
+.column-top-right ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+}
+
+.column-top-left button,
+.column-top-right button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #444;
+}
+
+.column-top-left button:hover,
+.column-top-right button:hover {
+  background: #f3f2f1;
+}
+
+.column-top-left-date {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: #666;
+}
+
+/* Alt görev ekleme alanı */
+.column-bottom {
+  padding: 15px 20px;
+}
+
+.add-Task {
+  background: #fff;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-TaskNew {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.add-TaskNew button {
+  background: none;
+  font-size: 18px;
+  color: #555;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.add-TaskNew input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 14px;
+  outline: none;
+}
+
+.taskCreation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 5px;
+  padding: 8px;
+}
+
+.taskCreation-entrybar-left ul {
+  display: flex;
+  gap: 5px;
+  list-style: none;
+}
+
+.taskCreation-entrybar-left button {
+  background: none;
+  font-size: 16px;
+  color: #444;
+  cursor: pointer;
+}
+
+.taskCreation-entrybar-right button {
+  background: #2564cf;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.taskCreation-entrybar-right button:hover {
+  background: #1d4fb5;
+}
+/* Genel font */
+#content-area,
+#content-area button,
+#content-area input {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #323130; /* MS To Do yazı rengi */
+}
+
+/* İkon renkleri */
+#content-area i {
+  color: #5e5e5e; /* Varsayılan gri */
+}
+
+#content-area button:hover i {
+  color: #2564cf; /* Hover mavi */
+}
+
+/* Başlık "Günüm" için */
+.column-top-left .title {
+  font-weight: 600;
+  font-size: 18px;
+  color: #323130;
+}
+
+/* Üst buton yazı ve ikonları */
+.column-top-left button,
+.column-top-right button {
+  color: #323130;
+  font-size: 14px;
+}
+
+.column-top-left button:hover,
+.column-top-right button:hover {
+  background-color: #edebe9;
+}
+
+/* Tarih */
+.column-top-left-date {
+  font-size: 14px;
+  font-weight: 500;
+  color: #605e5c;
+}
+
+/* Görev ekleme input */
+.add-TaskNew input {
+  font-size: 14px;
+  color: #323130;
+}
+
+/* Ekle butonu */
+.taskCreation-entrybar-right button {
+  background: #2564cf;
+  color: #fff;
+  font-weight: 500;
+}
+
+.taskCreation-entrybar-right button:hover {
+  background: #1b4faf;
+}
+
+/* Görev ekleme ikonları */
+.taskCreation-entrybar-left button i {
+  color: #5e5e5e;
+}
+
+.taskCreation-entrybar-left button:hover i {
+  color: #2564cf;
+}
 
 

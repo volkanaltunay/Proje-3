@@ -33,3 +33,5 @@ background-color: #f3f2f1;
 <i class="fa-solid fa-calendar-days"></i>
 <i class="fa-solid fa-user-group"></i>
 <i class="fa-solid fa-check"></i>
+
+<i class="fa-solid fa-bars-staggered"></i>

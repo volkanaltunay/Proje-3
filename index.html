@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To Do</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   </head>
   <body>
@@ -94,7 +91,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="footer">
+          <a href="index.html" class="footer">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
             <span class="nav-item">Çıkış Yap</span>
           </a>
@@ -103,8 +100,96 @@
     </nav>
     <!-- Sağ İçerik Alanı -->
     <main id="content-area">
-      <h1>Hoş geldin</h1>
-      <p>Bir menü seçerek başlayabilirsin.</p>
+      <section center-column>
+        <div class="column-top">
+          <div class="column-top-left">
+            <ul>
+              <li>
+                <button>
+                  <i class="fa-regular fa-sun"></i>
+                  <span class="title">Günüm</span>
+                </button>
+              </li>
+              <li>
+                <button>
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+              </li>
+              <li>
+                <button>
+                  <i class="fa-solid fa-table-cells-large"></i>
+                  <span>Tablo</span>
+                </button>
+              </li>
+              <li>
+                <button>
+                  <i class="fa-solid fa-bars-staggered"></i>
+                  <span>Liste</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="column-top-right">
+            <ul>
+              <li>
+                <button>
+                  <i class="fa-solid fa-arrow-down-a-z"></i>
+                  <span>Sırala</span>
+                </button>
+              </li>
+              <li>
+                <button>
+                  <i class="fa-solid fa-layer-group"></i>
+                  <span>Grup</span>
+                </button>
+              </li>
+              <li>
+                <button>
+                  <i class="fa-regular fa-lightbulb"></i>
+                  <span>Öneriler</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="column-top-left-date">
+            <span class="date">13 Ağustos Çarşamba</span>
+          </div>
+        </div>
+        <div class="column-bottom">
+          <div class="add-Task">
+            <div class="add-TaskNew">
+              <button>
+                <i class="fa-regular fa-circle"></i>
+              </button>
+              <input type="text" placeholder="Görev Ekle">
+            </div>
+          </div>
+          <div class="taskCreation">
+            <div class="taskCreation-entrybar-left">
+              <ul>
+                <li>
+                <button>
+                  <i class="fa-solid fa-calendar-days"></i>
+                </button>
+                </li>
+                <li>
+                  <button>
+                    <i class="fa-solid fa-bell"></i>
+                  </button>
+                </li>
+                <li>
+                  <button>
+                    <i class="fa-solid fa-repeat"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="taskCreation-entrybar-right">
+              <button aria-label="Ekle">Ekle</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
   
