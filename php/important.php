@@ -14,15 +14,6 @@
   margin-left: 150px;
   transition: margin-left 0.3s ease;
 }
-#content-area i {
-  color: #2564cf; /* Varsayılan gri */
-}
-
-.column-top-left button,span,
-.column-top-right button,span {
-  color: #2564cf;
-  font-size: 14px;
-}
 </style>
 <body>
         <main id="content-area">

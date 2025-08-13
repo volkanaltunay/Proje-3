@@ -8,6 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    #content-area {
+  margin-left: 150px;
+  transition: margin-left 0.3s ease;
+}
+</style>
 <body>
 <!-- Sağ İçerik Alanı -->
 <main id="content-area">
