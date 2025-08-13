@@ -1,4 +1,24 @@
 <?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $title = $_POST['title'] ?? '';
+    if ($title != '') {
+        $stmt = $db->prepare("INSERT INTO tasks (title) VALUES (:title)");
+        $stmt->bindParam(':title', $title);
+        if ($stmt->execute()) {
+            echo json_encode([
+                "success" => true,
+                "task" => [
+                    "title" => $title,
+                    "date" => date("d F Y"),
+                    "importance" => false
+                ]
+            ]);
+            exit;
+        }
+    }
+    echo json_encode(["success" => false]);
+    exit;
+}
 
 require 'database.php';
 
@@ -42,7 +62,7 @@ try {
 </head>
 <body>
 <!-- Sağ İçerik Alanı -->
-<main id="content-area">
+    <main id="content-area">
       <section center-column>
         <div class="column-top">
           <div class="column-top-left">
@@ -94,45 +114,81 @@ try {
               </li>
             </ul>
           </div>
-            <div class="column-top-left-date">
-                <span class="date"><?php echo date('d F Y'); ?></span>
-            </div>
+          <div class="column-top-left-date">
+            <span class="date">13 Ağustos Çarşamba</span>
+          </div>
         </div>
-        
         <div class="column-bottom">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <div class="add-Task">
-                    <div class="add-TaskNew">
-                        <button type="button">
-                            <i class="fa-regular fa-circle"></i>
-                        </button>
-                        <input type="text" name="title" id="task-input" placeholder="Görev Ekle">
-                    </div>
-                </div>
-                <div class="taskCreation">
-                    <div class="taskCreation-entrybar-left">
-                        </div>
-                    <div class="taskCreation-entrybar-right">
-                        <button type="submit" aria-label="Ekle">Ekle</button>
-                    </div>
-                </div>
-            </form>
-            
-            <div class="task-list">
-                <h3>Bekleyen Görevler</h3>
-                <?php if (empty($tasks)): ?>
-                    <p>Henüz eklenmiş bir görev yok.</p>
-                <?php else: ?>
-                    <ul>
-                        <?php foreach ($tasks as $task): ?>
-                            <li>
-                                <input type="checkbox" <?php echo ($task['status'] === 'completed') ? 'checked' : ''; ?>>
-                                <span><?php echo htmlspecialchars($task['title']); ?></span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
+          <div class="add-Task">
+            <div class="add-TaskNew">
+              <button>
+                <i class="fa-regular fa-circle"></i>
+              </button>
+              <input type="text" placeholder="Görev Ekle">
             </div>
+          </div>
+          <div class="taskCreation">
+            <div class="taskCreation-entrybar-left">
+              <ul>
+                <li>
+                <button>
+                  <i class="fa-solid fa-calendar-days"></i>
+                </button>
+                </li>
+                <li>
+                  <button>
+                    <i class="fa-solid fa-bell"></i>
+                  </button>
+                </li>
+                <li>
+                  <button>
+                    <i class="fa-solid fa-repeat"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="taskCreation-entrybar-right">
+              <button aria-label="Ekle">Ekle</button>
+            </div>
+          </div>
+          <div class="grid-wiew">
+            <div class="grid-wiew-container">
+              <div class="grid-container">
+                <div class="grid-container-header">
+                  <ul>
+                    <li></li>
+                    <li>
+                      <span class="title">Adı</span>
+                    </li>
+                    <li>
+                      <span class="date">Tarih</span>
+                    </li>
+                    <li>
+                      <span class="importance">Önem Derecesi</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="grid">
+                  <ul>
+                    <li>
+                      <button class="completed">
+                        <i class="fa-regular fa-circle"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <span class="title"></span>
+                    </li>
+                    <li>
+                      <span class="date"></span>
+                    </li>
+                    <li>
+                      <span class="importance"><i class="fa-solid fa-star"></i></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>

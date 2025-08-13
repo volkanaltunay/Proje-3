@@ -7,35 +7,29 @@ document.addEventListener("DOMContentLoaded", function () {
     loadTasks();
 
     // Görev ekleme butonuna tıklanınca
-    addButton.addEventListener("click", function () {
-        const taskName = taskInput.value.trim();
-        if (taskName === "") {
-            if (typeof toastr !== 'undefined') {
-                toastr.warning("Lütfen bir görev adı girin");
-            }
-            return;
-        }
+addButton.addEventListener("click", function () {
+    const taskName = taskInput.value.trim();
+    if (taskName === "") {
+        toastr.warning("Lütfen bir görev adı girin");
+        return;
+    }
 
-        const newTask = {
-            title: taskName,
-            date: getTodayDate(),
-            importance: false,
-            completed: false
-        };
-
-        // Görevi kaydet
-        saveTask(newTask);
-
-        // Görevi ekranda göster
-        addTaskRow(newTask);
-
-        // Input temizle
-        taskInput.value = "";
-
-        if (typeof toastr !== 'undefined') {
+    fetch("myday.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "title=" + encodeURIComponent(taskName)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            addTaskRow(data.task);
             toastr.success("Görev eklendi");
+        } else {
+            toastr.error("Görev eklenemedi");
         }
     });
+});
+
 
     // Görev satırı oluşturma
     function addTaskRow(task) {
