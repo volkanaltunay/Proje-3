@@ -1,0 +1,34 @@
+# Proje 3: Yapılacaklar Listesi Uygulaması
+
+## Projenin Amacı
+
+Bu proje, günlük görevlerinizi kolayca yönetebilmeniz için geliştirdiğim bir yapılacaklar listesi uygulamasıdır. Proje yapısı, işlevselliği artırmak ve kodu daha düzenli tutmak amacıyla modüler bir şekilde tasarlanmıştır.
+
+## Proje Yapısı
+Aşağıdaki ağaç yapısı, projenin ana klasör ve dosya düzenini göstermektedir:
+
+Proje-3/
+├── css/
+│   └── style.css           # Uygulamanın tüm stil tanımlamaları
+├── js/
+│   └── script.js           # Uygulamanın dinamik işlevlerini yöneten JavaScript kodu
+├── php/
+│   ├── .env                # Veritabanı ve hassas bilgilerin saklandığı ortam değişkenleri dosyası
+│   ├── assigned_to_me.php  # Kullanıcıya atanmış görevleri listeleme mantığı
+│   ├── category.php        # Kategori yönetimi (ekleme, silme, düzenleme)
+│   ├── completed.php       # Tamamlanmış görevleri listeleme veya işaretleme
+│   ├── database.php        # Veritabanı bağlantısını kuran ana dosya
+│   ├── delete.php          # Görev silme işlevselliği
+│   ├── flagged.php         # İşaretlenmiş (flagged) görevlerin listesi
+│   ├── important.php       # Önemli görevlerin listesi
+│   ├── inbox.php           # Gelen kutusu görevlerini listeleme
+│   ├── myday.php           # "Günüm" sayfasındaki görevleri listeleme
+│   ├── test_connection.php # Veritabanı bağlantısını test etmek için kullanılan yardımcı dosya
+│   ├── update_task_status.php # Görev durumunu (tamamlandı vb.) güncelleme işlevi
+│   └── update_task.php     # Görev bilgilerini (başlık, açıklama) güncelleme işlevi
+├── asset.txt               # Proje varlıklarının (fontlar, ikonlar vb.) listesi
+├── index.html              # Uygulamanın ana arayüzünü içeren HTML dosyası
+├── README                  # Bu proje hakkında genel bilgilerin bulunduğu dosya
+└── Todo List Seviye 1.pdf  # Projenin başlangıç planlama veya gereksinimler belgesi
+
+Bu yapı sayesinde, her bir dosya ve klasör kendi özel görevini üstlenerek projenin yönetimi ve gelecekteki geliştirmeleri kolaylaştırır.
