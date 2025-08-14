@@ -477,7 +477,7 @@ nav i{
 /* Stil for buttons */
 .grid button {
     background: none;
-    /* border: 1px solid #ccc; */
+    
     border-radius: 3px;
     padding: 5px 10px;
     cursor: pointer;
@@ -488,23 +488,19 @@ nav i{
 .grid button:hover {
     background: #e0e0e0;
 }
-
-.grid button[aria-label="Clear"] {
-    border-color: #dc3545;
-    color: #dc3545;
+.grid button[aria-label="Sil"] {
+    border: 1px solid #ccc; 
+    border-color: #e02108;
+}
+.grid button[aria-label="Güncelle"] {
+    border: 1px solid #ccc; 
+    border-color: #02b328;
 }
 
-.grid button[aria-label="Clear"]:hover {
-    background: #dc3545;
-    color: #fff;
+.completed-title {
+    text-decoration: line-through; /* Üzerini çiz */
+    color: #888; /* Rengi biraz soluklaştırarak vurguyu azalt */
 }
-.completed-task .title-text {
-    text-decoration: line-through;
-    color: #888; /* Tamamlanmış görevlerin daha soluk görünmesi için */
+.completed-task {
+  display: none; /* Bu sınıf eklenince görevler gizlenir */
 }
-
-.completed-task .completed-btn {
-    color: #2564cf; /* Düğme rengini maviye çevir */
-}
-
-

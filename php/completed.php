@@ -39,7 +39,7 @@ try {
     <div class="column-top">
         <div class="column-top-left">
             <ul>
-                <li><button><i class="fa-solid fa-list"></i><span class="title">Kategori</span></button></li>
+                <li><button><i class="fa-regular fa-calendar-check"></i><span class="title">Tamamlanan</span></button></li>
                 <li><button><i class="fa-solid fa-ellipsis"></i></button></li>
                 <li><button><i class="fa-solid fa-table-cells-large"></i><span>Tablo</span></button></li>
                 <li><button><i class="fa-solid fa-bars-staggered"></i><span>Liste</span></button></li>
@@ -88,9 +88,6 @@ try {
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
-            <div class="category-container">
-                
             </div>
         </div>
     </div>
