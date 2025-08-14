@@ -97,7 +97,7 @@ try {
                     <p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>
                 <?php else: ?>
                     <?php foreach ($tasks as $task): ?>
-                        <div class="grid">
+                        <div class="grid" data-id="<?php echo htmlspecialchars($task['id']); ?>">
                             <ul>
                                 <li>
                                     <button type="submit" aria-label="completed"><i class="fa-regular fa-circle"></i></button>
@@ -117,7 +117,7 @@ try {
                                     <button type="submit" aria-label="Güncele">Güncele</button>
                                 </li>
                                 <li>
-                                    <button type="submit" aria-label="Clear">Sil</button>
+                                    <button type="button" class="delete-btn" aria-label="Clear">Sil</button>
                                 </li>
                             </ul>
                         </div>
@@ -160,6 +160,37 @@ try {
                     toastr.error('Görev eklenirken bir hata oluştu: ' + error);
                 }
             });
+        });
+
+        // Yeni eklenen JavaScript: Silme butonuna tıklandığında çalışır
+        $(document).on('click', '.delete-btn', function() {
+            var taskId = $(this).closest('.grid').data('id');
+            var taskElement = $(this).closest('.grid');
+
+            if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "php/delete.php",
+                    data: { id: taskId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            taskElement.remove();
+                            
+                            if ($('.grid-tasks .grid').length === 0) {
+                                $('.grid-tasks').html('<p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>');
+                            }
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Görev silinirken bir hata oluştu.');
+                        console.error("Hata:", error);
+                    }
+                });
+            }
         });
     });
 </script>
