@@ -138,13 +138,12 @@ error_reporting(E_ALL);
 </section>
 <script>
 $(document).ready(function() {
-    // 1. Form gönderimi (görev ekleme)
+    // 1. Form gönderimini yakala (görev ekleme)
     $('#taskForm').on('submit', function(e) {
         e.preventDefault();
         
         var form = $(this);
-        // Doğru URL: php/myday.php
-        var url = "php/myday.php"; 
+        var url = form.attr('action');
         var taskTitle = $('#task-input').val();
 
         if (taskTitle.trim() === '') {
@@ -159,7 +158,6 @@ $(document).ready(function() {
             success: function(response) {
                 toastr.success('Görev başarıyla eklendi!');
                 $('#task-input').val('');
-                // Başarılı olursa, içeriği yeniden yükle
                 $('#content-area').load('php/inbox.php');
             },
             error: function(xhr, status, error) {
@@ -168,9 +166,17 @@ $(document).ready(function() {
         });
     });
     
-    // ... Diğer kodlar ...
+    // 2. Görev başlığına çift tıklandığında düzenlenebilir hale getir
+    $(document).on('dblclick', '.title-text', function() {
+        var $titleSpan = $(this);
+        var currentTitle = $titleSpan.text();
+        var $input = $('<input type="text" class="edit-input" />').val(currentTitle);
 
-    // 3. "Güncelle" butonu
+        $titleSpan.hide().after($input);
+        $input.focus();
+    });
+
+    // 3. "Güncelle" butonuna tıklandığında çalışacak kod
     $(document).on('click', '.update-btn', function() {
         var $gridDiv = $(this).closest('.grid');
         var taskId = $gridDiv.data('id');
@@ -186,7 +192,6 @@ $(document).ready(function() {
 
             $.ajax({
                 type: "POST",
-                // Doğru URL: php/update_task.php
                 url: "php/update_task.php",
                 data: { id: taskId, title: newTitle },
                 dataType: 'json',
@@ -209,9 +214,19 @@ $(document).ready(function() {
         }
     });
 
-    // ... Diğer kodlar ...
+    // 4. Input alanından çıkıldığında (blur)
+    $(document).on('blur', '.edit-input', function() {
+        var $input = $(this);
+        var newTitle = $input.val();
+        var $titleSpan = $input.siblings('.title-text');
 
-    // 5. Silme butonu
+        if (newTitle.trim() === '' || newTitle === $titleSpan.text()) {
+            $titleSpan.show();
+            $input.remove();
+        }
+    });
+    
+    // 5. Silme butonuna tıklandığında çalışır
     $(document).on('click', '.delete-btn', function() {
         var taskId = $(this).closest('.grid').data('id');
         var taskElement = $(this).closest('.grid');
@@ -226,7 +241,6 @@ $(document).ready(function() {
         if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
             $.ajax({
                 type: "POST",
-                // Doğru URL: php/delete.php
                 url: "php/delete.php",
                 data: { id: taskId },
                 dataType: 'json',
@@ -250,7 +264,23 @@ $(document).ready(function() {
         }
     });
 
-    // ... Diğer kodlar ...
+    // 6. Toggle butonu ile gizlenmiş görevleri gösterme/gizleme
+    const toggleButton = document.getElementById('toggle-button');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    toggleButton.addEventListener('click', () => {
+        if (toggleIcon.classList.contains('fa-eye')) {
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+            $('.grid.completed-task').show();
+            toastr.info("Tamamlananlar açıldı.");
+        } else {
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+            $('.grid.completed-task').hide();
+            toastr.info("Tamamlananlar gizlendi.");
+        }
+    });
 
     // 7. Görev tamamlama butonu
     $(document).on('click', 'button[aria-label="completed"]', function() {
@@ -261,7 +291,6 @@ $(document).ready(function() {
         
         $.ajax({
             type: "POST",
-            // Doğru URL: php/update_task_status.php
             url: "php/update_task_status.php",
             data: { task_id: taskId },
             dataType: 'json',
