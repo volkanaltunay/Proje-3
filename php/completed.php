@@ -24,9 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['title'])) {
 }
 
 // --- Tüm görevleri (tasks) veritabanından çekme ---
+// --- Sadece tamamlanmış görevleri (tasks) veritabanından çekme ---
 $tasks = [];
 try {
-    $query = "SELECT id, title, status, created_at FROM tasks WHERE deleted_at IS NULL ORDER BY created_at DESC";
+    $query = "SELECT id, title, status, created_at FROM tasks WHERE status = 'completed' AND deleted_at IS NULL ORDER BY created_at DESC";
     $stmt = $db->prepare($query);
     $stmt->execute();
     $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +66,7 @@ try {
             </div>
             <div class="grid-tasks">
                 <?php if (empty($tasks)): ?>
-                    <p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>
+                    <p style="padding: 10px; text-align: center;">Henüz tamamlanan bir görev yok.</p>
                 <?php else: ?>
                     <?php foreach ($tasks as $task): ?>
                         <div class="grid">
@@ -94,37 +95,3 @@ try {
     </div>
     </div>
 </section>
-
-<script>
-    $(document).ready(function() {
-        // Form gönderimini yakala
-        $('#taskForm').on('submit', function(e) {
-            e.preventDefault(); // Varsayılan form gönderimini engelle
-            
-            var form = $(this);
-            var url = form.attr('action');
-            var taskTitle = $('#task-input').val();
-
-            if (taskTitle.trim() === '') {
-                toastr.warning('Lütfen bir görev başlığı girin.');
-                return;
-            }
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(response) {
-                    toastr.success('Görev başarıyla eklendi!');
-                    $('#task-input').val('');
-                    
-                    // Görev listesini yeniden yükle
-                    $('#content-area').load('php/important.php');
-                },
-                error: function(xhr, status, error) {
-                    toastr.error('Görev eklenirken bir hata oluştu: ' + error);
-                }
-            });
-        });
-    });
-</script>

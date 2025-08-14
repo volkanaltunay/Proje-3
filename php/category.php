@@ -97,37 +97,3 @@ try {
     </div>
     </div>
 </section>
-
-<script>
-    $(document).ready(function() {
-        // Form gönderimini yakala
-        $('#taskForm').on('submit', function(e) {
-            e.preventDefault(); // Varsayılan form gönderimini engelle
-            
-            var form = $(this);
-            var url = form.attr('action');
-            var taskTitle = $('#task-input').val();
-
-            if (taskTitle.trim() === '') {
-                toastr.warning('Lütfen bir görev başlığı girin.');
-                return;
-            }
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(response) {
-                    toastr.success('Görev başarıyla eklendi!');
-                    $('#task-input').val('');
-                    
-                    // Görev listesini yeniden yükle
-                    $('#content-area').load('php/important.php');
-                },
-                error: function(xhr, status, error) {
-                    toastr.error('Görev eklenirken bir hata oluştu: ' + error);
-                }
-            });
-        });
-    });
-</script>

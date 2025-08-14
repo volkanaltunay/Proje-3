@@ -499,7 +499,7 @@ nav i{
 
 .completed-title {
     text-decoration: line-through; /* Üzerini çiz */
-    color: #888; /* Rengi biraz soluklaştırarak vurguyu azalt */
+    color: #2564cf; /* Rengi biraz soluklaştırarak vurguyu azalt */
 }
 .completed-task {
   display: none; /* Bu sınıf eklenince görevler gizlenir */
