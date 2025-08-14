@@ -47,7 +47,11 @@ try {
         </div>
         <div class="column-top-right">
             <ul>
-                <li><button><i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span></button></li>
+                <li>
+                    <button id="sort-button">
+                    <i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span>
+                    </button>
+                </li>
                 <li><button><i class="fa-solid fa-layer-group"></i><span>Grup</span></button></li>
                 <li><button><i class="fa-regular fa-lightbulb"></i><span>Öneriler</span></button></li>
             </ul>
@@ -155,4 +159,31 @@ try {
             });
         });
     });
+    $(document).ready(function() {
+    let sortAsc = true; 
+
+    $('#sort-button').on('click', function(e) {
+        e.preventDefault();
+        
+        let $tasksContainer = $('.grid-tasks');
+        let $tasks = $tasksContainer.children('.grid');
+
+        $tasks.sort(function(a, b) {
+            let titleA = $(a).find('.title').text().toLowerCase(); 
+            let titleB = $(b).find('.title').text().toLowerCase();
+            
+            if (titleA < titleB) return sortAsc ? -1 : 1;
+            if (titleA > titleB) return sortAsc ? 1 : -1;
+            return 0;
+        });
+
+
+        $tasksContainer.append($tasks);
+
+        sortAsc = !sortAsc;
+
+        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
+    });
+});
+
 </script>
