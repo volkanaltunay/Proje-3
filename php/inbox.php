@@ -93,37 +93,37 @@ try {
                 </ul>
             </div>
             <div class="grid-tasks">
-                <?php if (empty($tasks)): ?>
-                    <p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>
-                <?php else: ?>
-                    <?php foreach ($tasks as $task): ?>
-                        <div class="grid" data-id="<?php echo htmlspecialchars($task['id']); ?>">
-                            <ul>
-                                <li>
-                                    <button type="submit" aria-label="completed"><i class="fa-regular fa-circle"></i></button>
-                                </li>
-                                <li>
-                                    <span class="title"><?php echo htmlspecialchars($task['title']); ?></span>
-                                </li>
-                                <li>
-                                    <span class="date">
-                                        <?php echo (new DateTime($task['created_at']))->format('d/m/Y H:i'); ?>
-                                    </span>
-                                </li>
-                                <li>
-                                    <button type="submit" aria-label="importance"><i class="fa-regular fa-star"></i></button>
-                                </li>
-                                <li>
-                                    <button type="submit" aria-label="Güncele">Güncele</button>
-                                </li>
-                                <li>
-                                    <button type="button" class="delete-btn" aria-label="Clear">Sil</button>
-                                </li>
-                            </ul>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+    <?php if (empty($tasks)): ?>
+        <p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>
+    <?php else: ?>
+        <?php foreach ($tasks as $task): ?>
+            <div class="grid" data-id="<?php echo htmlspecialchars($task['id']); ?>">
+                <ul>
+                    <li>
+                        <button type="submit" aria-label="completed"><i class="fa-regular fa-circle"></i></button>
+                    </li>
+                    <li>
+                        <span class="title title-text"><?php echo htmlspecialchars($task['title']); ?></span>
+                    </li>
+                    <li>
+                        <span class="date">
+                            <?php echo (new DateTime($task['created_at']))->format('d/m/Y H:i'); ?>
+                        </span>
+                    </li>
+                    <li>
+                        <button type="submit" aria-label="importance"><i class="fa-regular fa-star"></i></button>
+                    </li>
+                    <li>
+                        <button type="button" class="update-btn" aria-label="Güncelle">Güncelle</button>
+                    </li>
+                    <li>
+                        <button type="button" class="delete-btn" aria-label="Sil">Sil</button>
+                    </li>
+                </ul>
             </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
         </div>
     </div>
 </div>
@@ -134,7 +134,7 @@ try {
     $(document).ready(function() {
         // Form gönderimini yakala
         $('#taskForm').on('submit', function(e) {
-            e.preventDefault(); // Varsayılan form gönderimini engelle
+            e.preventDefault();
             
             var form = $(this);
             var url = form.attr('action');
@@ -153,7 +153,6 @@ try {
                     toastr.success('Görev başarıyla eklendi!');
                     $('#task-input').val('');
                     
-                    // Görev listesini yeniden yükle
                     $('#content-area').load('php/inbox.php');
                 },
                 error: function(xhr, status, error) {
@@ -161,12 +160,79 @@ try {
                 }
             });
         });
+        
+        // Görev başlığına çift tıklandığında düzenlenebilir hale getir
+        $(document).on('dblclick', '.title-text', function() {
+            var $titleSpan = $(this);
+            var currentTitle = $titleSpan.text();
+            var $input = $('<input type="text" class="edit-input" />').val(currentTitle);
 
-        // Yeni eklenen JavaScript: Silme butonuna tıklandığında çalışır
-        $(document).on('click', '.delete-btn', function() {
+            $titleSpan.hide().after($input);
+            $input.focus();
+        });
+
+        // "Güncelle" butonuna tıklandığında çalışacak kod
+        $(document).on('click', '.update-btn', function() {
+            var $gridDiv = $(this).closest('.grid');
+            var taskId = $gridDiv.data('id');
+            var $input = $gridDiv.find('.edit-input');
+
+            if ($input.length) {
+                var newTitle = $input.val();
+                
+                if (newTitle.trim() === '') {
+                    toastr.warning('Görev başlığı boş bırakılamaz.');
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "php/update_task.php",
+                    data: { id: taskId, title: newTitle },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            $gridDiv.find('.title-text').text(newTitle).show();
+                            $input.remove();
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Güncelleme sırasında bir hata oluştu.');
+                        console.error("Hata:", error);
+                    }
+                });
+            } else {
+                toastr.warning('Lütfen önce başlığı çift tıklayarak düzenleyin.');
+            }
+        });
+
+        // Input alanından çıkıldığında (blur)
+        $(document).on('blur', '.edit-input', function() {
+            var $input = $(this);
+            var newTitle = $input.val();
+            var $titleSpan = $input.siblings('.title-text');
+
+            if (newTitle.trim() === '' || newTitle === $titleSpan.text()) {
+                $titleSpan.show();
+                $input.remove();
+            }
+        });
+        
+        // Silme butonuna tıklandığında çalışır
+         $(document).on('click', '.delete-btn', function() {
             var taskId = $(this).closest('.grid').data('id');
             var taskElement = $(this).closest('.grid');
 
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "onclick": null
+            };
+            
             if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
                 $.ajax({
                     type: "POST",
