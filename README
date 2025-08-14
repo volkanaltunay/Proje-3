@@ -21,7 +21,7 @@ Proje-3/
 │   ├── delete.php          # Görev silme işlevselliği
 │   ├── flagged.php         # İşaretlenmiş (flagged) görevlerin listesi
 │   ├── important.php       # Önemli görevlerin listesi
-│   ├── inbox.php           # Gelen kutusu görevlerini listeleme
+│   ├── inbox.php           # Gelen kutusu görevlerini listeleme (Güncele,Sil ve Tamamlandı gibi kısımları içerir.)
 │   ├── myday.php           # "Günüm" sayfasındaki görevleri listeleme
 │   ├── test_connection.php # Veritabanı bağlantısını test etmek için kullanılan yardımcı dosya
 │   ├── update_task_status.php # Görev durumunu (tamamlandı vb.) güncelleme işlevi
