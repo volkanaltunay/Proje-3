@@ -477,7 +477,7 @@ nav i{
 /* Stil for buttons */
 .grid button {
     background: none;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 3px;
     padding: 5px 10px;
     cursor: pointer;
@@ -497,6 +497,14 @@ nav i{
 .grid button[aria-label="Clear"]:hover {
     background: #dc3545;
     color: #fff;
+}
+.completed-task .title-text {
+    text-decoration: line-through;
+    color: #888; /* Tamamlanmış görevlerin daha soluk görünmesi için */
+}
+
+.completed-task .completed-btn {
+    color: #2564cf; /* Düğme rengini maviye çevir */
 }
 
 

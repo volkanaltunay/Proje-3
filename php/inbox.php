@@ -35,7 +35,7 @@ try {
 }
 ?>
 
-<section center-column>
+    <section center-column>
     <div class="column-top">
         <div class="column-top-left">
             <ul>
