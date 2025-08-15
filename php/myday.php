@@ -60,7 +60,11 @@ try {
                     <i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span>
                     </button>
                 </li>
-                <li><button><i class="fa-solid fa-layer-group"></i><span>Grup</span></button></li>
+                <li>
+                    <button id="restore-completed-button"  title="Tamamlanmış görevleri tekrar listeye ekle">
+                    <i class="fa-solid fa-arrows-rotate"></i><span>Geri Getir</span>
+                    </button>
+                </li>
                 <li><button><i class="fa-regular fa-lightbulb"></i><span>Öneriler</span></button></li>
             </ul>
         </div>
@@ -72,9 +76,8 @@ try {
                 <div class="taskCreation">
                 <div class="taskCreation-entrybar-left">
                     <ul>
-                        <li><button id="calendar-button"><i class="fa-regular fa-calendar-days"></i></button></li>
-                        <li><button id="show-tasks-by-date"><i class="fa-regular fa-bell"></i></button></li>
-                        <li><button><i class="fa-solid fa-repeat"></i></button></li>
+                        <li><button id="calendar-button" title="Takvim"><i class="fa-regular fa-calendar-days"></i></button></li>
+                        <li><button id="show-tasks-by-date" title="Teslim tarihine göre veri listesi "><i class="fa-regular fa-bell"></i></button></li>
                     </ul>
                 </div>
             </div>
@@ -379,5 +382,26 @@ $(document).on('click', 'button[aria-label="importance"]', function() {
             });
         }
     });
-
+$(document).ready(function() {
+    // "Geri Getir" butonuna tıklandığında
+    $(document).on('click', '#restore-completed-button', function() {
+        $.ajax({
+            type: "POST",
+            url: "php/restore_completed_tasks.php",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    // Görev listesini yenile
+                    $('#content-area').load('php/myday.php');
+                } else {
+                    toastr.info(response.message);
+                }
+            },
+            error: function() {
+                toastr.error('Sunucu ile iletişim kurulamadı.');
+            }
+        });
+    });
+});
 </script>

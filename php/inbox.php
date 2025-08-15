@@ -55,7 +55,12 @@ error_reporting(E_ALL);
                     <i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span>
                     </button>
                 </li>
-                <li><button><i class="fa-solid fa-layer-group"></i><span>Grup</span></button></li>
+                <li>
+                    <button id="restore-completed-button">
+                    <i class="fa-solid fa-arrows-rotate"></i><span>Geri Getir</span>
+                    </button>
+                </li>
+                <li><button><i class="fa-regular fa-lightbulb"></i><span>Öneriler</span></button></li>
             </ul>
         </div>
         <div class="column-top-left-date">
@@ -63,6 +68,14 @@ error_reporting(E_ALL);
         </div>
     </div>
     <div class="column-bottom">
+                <div class="taskCreation">
+                <div class="taskCreation-entrybar-left">
+                    <ul>
+                        <li><button id="calendar-button" title="Takvim"><i class="fa-regular fa-calendar-days"></i></button></li>
+                        <li><button id="show-tasks-by-date" title="Teslim tarihine göre veri listesi "><i class="fa-regular fa-bell"></i></button></li>
+                    </ul>
+                </div>
+            </div>
         <form id="taskForm" action="php/myday.php" method="post">
             <div class="add-Task">
                 <div class="add-TaskNew">
@@ -70,18 +83,6 @@ error_reporting(E_ALL);
                         <i class="fa-regular fa-plus"></i>
                     </button>
                     <input type="text" name="title" id="task-input" placeholder="Görev Ekle">
-                </div>
-            </div>
-            <div class="taskCreation">
-                <div class="taskCreation-entrybar-left">
-                    <ul>
-                        <li><button><i class="fa-regular fa-calendar-days"></i></button></li>
-                        <li><button><i class="fa-regular fa-bell"></i></button></li>
-                        <li><button><i class="fa-solid fa-repeat"></i></button></li>
-                    </ul>
-                </div>
-                <div class="taskCreation-entrybar-right">
-                    <button type="submit" aria-label="Ekle">Ekle</button>
                 </div>
             </div>
         </form>
@@ -142,7 +143,16 @@ error_reporting(E_ALL);
 </section>
 <script>
 $(document).ready(function() {
-    // 1. Form gönderimini yakala (görev ekleme)
+
+    // Toastr genel ayarları
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000"
+    };
+
+    // 1. Görev ekleme (Form submit)
     $('#taskForm').on('submit', function(e) {
         e.preventDefault();
         
@@ -159,18 +169,18 @@ $(document).ready(function() {
             type: "POST",
             url: url,
             data: form.serialize(),
-            success: function(response) {
+            success: function() {
                 toastr.success('Görev başarıyla eklendi!');
                 $('#task-input').val('');
-                $('#content-area').load('php/inbox.php');
+                $('#content-area').load('php/myday.php');
             },
             error: function(xhr, status, error) {
                 toastr.error('Görev eklenirken bir hata oluştu: ' + error);
             }
         });
     });
-    
-    // 2. Görev başlığına çift tıklandığında düzenlenebilir hale getir
+
+    // 2. Görev başlığı çift tıklama → düzenleme
     $(document).on('dblclick', '.title-text', function() {
         var $titleSpan = $(this);
         var currentTitle = $titleSpan.text();
@@ -180,7 +190,7 @@ $(document).ready(function() {
         $input.focus();
     });
 
-    // 3. "Güncelle" butonuna tıklandığında çalışacak kod
+    // 3. Güncelle butonu
     $(document).on('click', '.update-btn', function() {
         var $gridDiv = $(this).closest('.grid');
         var taskId = $gridDiv.data('id');
@@ -208,9 +218,8 @@ $(document).ready(function() {
                         toastr.error(response.message);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     toastr.error('Güncelleme sırasında bir hata oluştu.');
-                    console.error("Hata:", error);
                 }
             });
         } else {
@@ -218,7 +227,7 @@ $(document).ready(function() {
         }
     });
 
-    // 4. Input alanından çıkıldığında (blur)
+    // 4. Düzenleme alanından çıkınca (blur)
     $(document).on('blur', '.edit-input', function() {
         var $input = $(this);
         var newTitle = $input.val();
@@ -229,18 +238,11 @@ $(document).ready(function() {
             $input.remove();
         }
     });
-    
-    // 5. Silme butonuna tıklandığında çalışır
+
+    // 5. Silme butonu
     $(document).on('click', '.delete-btn', function() {
         var taskId = $(this).closest('.grid').data('id');
         var taskElement = $(this).closest('.grid');
-
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "onclick": null
-        };
         
         if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
             $.ajax({
@@ -252,7 +254,6 @@ $(document).ready(function() {
                     if (response.success) {
                         toastr.success(response.message);
                         taskElement.remove();
-                        
                         if ($('.grid-tasks .grid').length === 0) {
                             $('.grid-tasks').html('<p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>');
                         }
@@ -260,39 +261,35 @@ $(document).ready(function() {
                         toastr.error(response.message);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     toastr.error('Görev silinirken bir hata oluştu.');
-                    console.error("Hata:", error);
                 }
             });
         }
     });
 
-    // 6. Toggle butonu ile gizlenmiş görevleri gösterme/gizleme
-    const toggleButton = document.getElementById('toggle-button');
-    const toggleIcon = document.getElementById('toggle-icon');
-
-    toggleButton.addEventListener('click', () => {
-        if (toggleIcon.classList.contains('fa-eye')) {
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
+    // 6. Tamamlanan görevleri gizle/göster
+    const toggleIcon = $('#toggle-icon');
+    $('#toggle-button').on('click', function() {
+        if (toggleIcon.hasClass('fa-eye')) {
+            toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
             $('.grid.completed-task').show();
             toastr.info("Tamamlananlar açıldı.");
         } else {
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
+            toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
             $('.grid.completed-task').hide();
             toastr.info("Tamamlananlar gizlendi.");
         }
     });
+    $('.grid.completed-task').hide(); // İlk açılışta gizle
 
-    // 7. Görev tamamlama butonu
+    // 7. Görev tamamlama
     $(document).on('click', 'button[aria-label="completed"]', function() {
-        const $completedButton = $(this);
-        const $taskElement = $completedButton.closest('.grid');
-        const taskId = $taskElement.data('id');
-        const $titleElement = $taskElement.find('.title-text');
-        
+        const $btn = $(this);
+        const $task = $btn.closest('.grid');
+        const taskId = $task.data('id');
+        const $title = $task.find('.title-text');
+
         $.ajax({
             type: "POST",
             url: "php/update_task_status.php",
@@ -301,85 +298,79 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     toastr.success('Görev durumu güncellendi.');
-                    $taskElement.toggleClass('completed-task');
-                    $titleElement.toggleClass('completed-title');
-                    
-                    if ($taskElement.hasClass('completed-task')) {
-                         $completedButton.find('i').removeClass('fa-circle').addClass('fa-circle-check');
-                    } else {
-                         $completedButton.find('i').removeClass('fa-circle-check').addClass('fa-circle');
-                    }
+                    $task.toggleClass('completed-task');
+                    $title.toggleClass('completed-title');
+                    $btn.find('i').toggleClass('fa-circle fa-circle-check');
                 } else {
-                    toastr.error('Görev güncellenirken bir hata oluştu: ' + response.message);
+                    toastr.error(response.message);
                 }
             },
             error: function() {
-                toastr.error('Sunucuyla iletişim kurulurken bir hata oluştu.');
+                toastr.error('Sunucuyla iletişim kurulurken hata oluştu.');
             }
         });
     });
 
-    // Sayfa yüklendiğinde tamamlanmış görevlerin gizli olması
-    $('.grid.completed-task').hide();
-});
-// 8.Görevleri başlığa göre sırala
-    $(document).ready(function() {
-    let sortAsc = true; 
-
+    // 8. Başlığa göre sıralama
+    let sortAsc = true;
     $('#sort-button').on('click', function(e) {
         e.preventDefault();
-        
         let $tasksContainer = $('.grid-tasks');
         let $tasks = $tasksContainer.children('.grid');
-
 
         $tasks.sort(function(a, b) {
             let titleA = $(a).find('.title').text().toLowerCase(); 
             let titleB = $(b).find('.title').text().toLowerCase();
-            
-            if (titleA < titleB) return sortAsc ? -1 : 1;
-            if (titleA > titleB) return sortAsc ? 1 : -1;
-            return 0;
+            return sortAsc ? titleA.localeCompare(titleB) : titleB.localeCompare(titleA);
         });
 
-
         $tasksContainer.append($tasks);
-
-
         sortAsc = !sortAsc;
-
-        toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
+        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
     });
-});
-// 9.Önem derecesi butonu tıklama
-$(document).on('click', 'button[aria-label="importance"]', function() {
-    const $btn = $(this);
-    const $task = $btn.closest('.grid');
-    const taskId = $task.data('id');
-    const $icon = $btn.find('i');
 
-    $.ajax({
-        type: "POST",
-        url: "php/update_importance.php",
-        data: { task_id: taskId },
-        dataType: "json",
-        success: function(response) {
-            if (response.success) {
-                if (response.importance === 'important') {
-                    $icon.removeClass('fa-regular').addClass('fa-solid').css('color', '#2564cf');
-                    toastr.success('Görev önemli olarak işaretlendi.');
+    // 9. Önem derecesi
+    $(document).on('click', 'button[aria-label="importance"]', function() {
+        const $btn = $(this);
+        const $task = $btn.closest('.grid');
+        const taskId = $task.data('id');
+        const $icon = $btn.find('i');
+
+        $.ajax({
+            type: "POST",
+            url: "php/update_importance.php",
+            data: { task_id: taskId },
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    if (response.importance === 'important') {
+                        $icon.removeClass('fa-regular').addClass('fa-solid').css('color', '#2564cf');
+                        toastr.success('Görev önemli olarak işaretlendi.');
+                    } else {
+                        $icon.removeClass('fa-solid').addClass('fa-regular').css('color', '');
+                        toastr.info('Görev önemli listesinden çıkarıldı.');
+                    }
                 } else {
-                    $icon.removeClass('fa-solid').addClass('fa-regular').css('color', '');
-                    toastr.info('Görev önemli listesinden çıkarıldı.');
+                    toastr.error(response.message || 'Bir hata oluştu.');
                 }
-            } else {
-                toastr.error(response.message || 'Bir hata oluştu.');
+            },
+            error: function() {
+                toastr.error('Sunucu ile iletişim kurulamadı.');
             }
-        },
-        error: function() {
-            toastr.error('Sunucu ile iletişim kurulamadı.');
+        });
+    });
+
+    // 10. Flatpickr ile tarih seçme
+    $('#taskForm').append('<input type="hidden" name="due_date" id="due-date-input">');
+    flatpickr("#calendar-button", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates, dateStr) {
+            $('#due-date-input').val(dateStr);
+            toastr.info('Görev için tarih belirlendi: ' + dateStr);
         }
     });
-});
 
+});
 </script>
+

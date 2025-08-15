@@ -53,6 +53,11 @@ try {
                     <i class="fa-solid fa-arrow-down-a-z"></i><span>Sırala</span>
                     </button>
                 </li>
+                <li>
+                    <button id="restore-completed-button">
+                    <i class="fa-solid fa-arrows-rotate"></i><span>Geri Getir</span>
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
@@ -128,4 +133,5 @@ try {
         toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
     });
 });
+
 </script>
