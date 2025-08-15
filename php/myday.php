@@ -69,6 +69,15 @@ try {
         </div>
     </div>
     <div class="column-bottom">
+                <div class="taskCreation">
+                <div class="taskCreation-entrybar-left">
+                    <ul>
+                        <li><button id="calendar-button"><i class="fa-regular fa-calendar-days"></i></button></li>
+                        <li><button id="show-tasks-by-date"><i class="fa-regular fa-bell"></i></button></li>
+                        <li><button><i class="fa-solid fa-repeat"></i></button></li>
+                    </ul>
+                </div>
+            </div>
         <form id="taskForm" action="php/myday.php" method="post">
             <div class="add-Task">
                 <div class="add-TaskNew">
@@ -78,19 +87,8 @@ try {
                     <input type="text" name="title" id="task-input" placeholder="Görev Ekle">
                 </div>
             </div>
-            <div class="taskCreation">
-                <div class="taskCreation-entrybar-left">
-                    <ul>
-                        <li><button id="calendar-button"><i class="fa-regular fa-calendar-days"></i></button></li>
-                        <li><button><i class="fa-regular fa-bell"></i></button></li>
-                        <li><button><i class="fa-solid fa-repeat"></i></button></li>
-                    </ul>
-                </div>
-                <div class="taskCreation-entrybar-right">
-                    <button type="submit" aria-label="Ekle">Ekle</button>
-                </div>
-            </div>
         </form>
+
         
 <div class="grid-wiew">
     <div class="grid-wiew-container">
@@ -108,7 +106,7 @@ try {
                     <p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>
                 <?php else: ?>
                     <?php foreach ($tasks as $task): ?>
-                        <div class="grid">
+                        <div class="grid <?php echo ($task['status'] == 'completed') ? 'completed-task' : ''; ?>" data-id="<?php echo htmlspecialchars($task['id']); ?>">
                             <ul>
                                 <li>
                                     <button type="submit" aria-label="completed"><i class="fa-regular fa-circle"></i></button>
@@ -210,6 +208,176 @@ $(document).ready(function() {
         toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
     });
 });
+// Seçtigin tarihteki görevleri listele
+$(document).on('click', '#show-tasks-by-date', function() {
+    const selectedDate = $('#due-date-input').val();
+    
+    if (selectedDate) {
+        toastr.info(selectedDate + ' tarihine ait görevler listeleniyor...');
+        
+        $('.grid-tasks').load('php/get_tasks_by_date.php?due_date=' + selectedDate, function(response, status, xhr) {
+            if (status === "error") {
+                toastr.error('Görevler yüklenirken bir hata oluştu.');
+            } else {
+                toastr.success(selectedDate + ' tarihine ait görevler başarıyla listelendi.');
+            }
+        });
+    } else {
+        toastr.warning('Lütfen önce takvimden bir tarih seçin.');
+    }
 });
+});
+    // 7. Görev tamamlama butonu
+    $(document).on('click', 'button[aria-label="completed"]', function() {
+        const $completedButton = $(this);
+        const $taskElement = $completedButton.closest('.grid');
+        const taskId = $taskElement.data('id');
+        const $titleElement = $taskElement.find('.title-text');
+        
+        $.ajax({
+            type: "POST",
+            url: "php/update_task_status.php",
+            data: { task_id: taskId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    toastr.success('Görev durumu güncellendi.');
+                    $taskElement.toggleClass('completed-task');
+                    $titleElement.toggleClass('completed-title');
+                    
+                    if ($taskElement.hasClass('completed-task')) {
+                         $completedButton.find('i').removeClass('fa-circle').addClass('fa-circle-check');
+                    } else {
+                         $completedButton.find('i').removeClass('fa-circle-check').addClass('fa-circle');
+                    }
+                } else {
+                    toastr.error('Görev güncellenirken bir hata oluştu: ' + response.message);
+                }
+            },
+            error: function() {
+                toastr.error('Sunucuyla iletişim kurulurken bir hata oluştu.');
+            }
+        });
+    });
+
+    // Sayfa yüklendiğinde tamamlanmış görevlerin gizli olması
+    $('.grid.completed-task').hide();
+    // 9.Önem derecesi butonu tıklama
+$(document).on('click', 'button[aria-label="importance"]', function() {
+    const $btn = $(this);
+    const $task = $btn.closest('.grid');
+    const taskId = $task.data('id');
+    const $icon = $btn.find('i');
+
+    $.ajax({
+        type: "POST",
+        url: "php/update_importance.php",
+        data: { task_id: taskId },
+        dataType: "json",
+        success: function(response) {
+            if (response.success) {
+                if (response.importance === 'important') {
+                    $icon.removeClass('fa-regular').addClass('fa-solid').css('color', '#2564cf');
+                    toastr.success('Görev önemli olarak işaretlendi.');
+                } else {
+                    $icon.removeClass('fa-solid').addClass('fa-regular').css('color', '');
+                    toastr.info('Görev önemli listesinden çıkarıldı.');
+                }
+            } else {
+                toastr.error(response.message || 'Bir hata oluştu.');
+            }
+        },
+        error: function() {
+            toastr.error('Sunucu ile iletişim kurulamadı.');
+        }
+    });
+});
+    // 3. "Güncelle" butonuna tıklandığında çalışacak kod
+    $(document).on('click', '.update-btn', function() {
+        var $gridDiv = $(this).closest('.grid');
+        var taskId = $gridDiv.data('id');
+        var $input = $gridDiv.find('.edit-input');
+
+        if ($input.length) {
+            var newTitle = $input.val();
+            
+            if (newTitle.trim() === '') {
+                toastr.warning('Görev başlığı boş bırakılamaz.');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "php/update_task.php",
+                data: { id: taskId, title: newTitle },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        $gridDiv.find('.title-text').text(newTitle).show();
+                        $input.remove();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('Güncelleme sırasında bir hata oluştu.');
+                    console.error("Hata:", error);
+                }
+            });
+        } else {
+            toastr.warning('Lütfen önce başlığı çift tıklayarak düzenleyin.');
+        }
+    });
+
+    // 4. Input alanından çıkıldığında (blur)
+    $(document).on('blur', '.edit-input', function() {
+        var $input = $(this);
+        var newTitle = $input.val();
+        var $titleSpan = $input.siblings('.title-text');
+
+        if (newTitle.trim() === '' || newTitle === $titleSpan.text()) {
+            $titleSpan.show();
+            $input.remove();
+        }
+    });
+    
+    // 5. Silme butonuna tıklandığında çalışır
+    $(document).on('click', '.delete-btn', function() {
+        var taskId = $(this).closest('.grid').data('id');
+        var taskElement = $(this).closest('.grid');
+
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "onclick": null
+        };
+        
+        if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
+            $.ajax({
+                type: "POST",
+                url: "php/delete.php",
+                data: { id: taskId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        taskElement.remove();
+                        
+                        if ($('.grid-tasks .grid').length === 0) {
+                            $('.grid-tasks').html('<p style="padding: 10px; text-align: center;">Henüz eklenmiş bir görev yok.</p>');
+                        }
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('Görev silinirken bir hata oluştu.');
+                    console.error("Hata:", error);
+                }
+            });
+        }
+    });
 
 </script>
