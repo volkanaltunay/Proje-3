@@ -8,6 +8,14 @@
   box-sizing: border-box;
   font-family: 'Arial', sans-serif; 
 }
+:root{
+  --header-color: #2564cf;
+  --sidebar-color: #fff;
+}
+.darkmode{
+  --header-color: #000000;
+  --sidebar-color: #b1b1b1;
+}
 body{
     background-color: #f3f2f1;
 }
@@ -15,10 +23,33 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2564cf; /* Dark blue color from the image */
+  background-color: var(--header-color); /* Dark blue color from the image */
   color: white;
   height: 48px; /* Adjust height as needed */
   width: 100%;
+}
+
+#theme-switch{
+  height: 30px;
+  width: 30px;
+  padding: 0px;
+  border-radius:50%;
+  background-color: #acacac;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#theme-switch svg{
+  fill: #000000;
+}
+#theme-switch svg:last-child{
+  display: none;
+}
+.darkmode #theame-switch svg:first-child{
+  display: none;
+}
+.darkmode #theame-switch svg:last-child{
+  display: block;
 }
 
 .header-left,
@@ -161,7 +192,7 @@ nav i{
 /* Sidebar */
 #sidebar {
   width: 280px;
-  background: #fff;
+  background-color: var(--sidebar-color);
   height: calc(100vh - 48px); /* header hariç yükseklik */
   transition: width 0.3s ease;
   overflow: hidden;
