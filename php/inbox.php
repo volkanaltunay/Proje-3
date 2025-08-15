@@ -323,7 +323,7 @@ $(document).ready(function() {
     $('.grid.completed-task').hide();
 });
 // 8.Görevleri başlığa göre sırala
-$(document).ready(function() {
+    $(document).ready(function() {
     let sortAsc = true; 
 
     $('#sort-button').on('click', function(e) {
@@ -331,6 +331,7 @@ $(document).ready(function() {
         
         let $tasksContainer = $('.grid-tasks');
         let $tasks = $tasksContainer.children('.grid');
+
 
         $tasks.sort(function(a, b) {
             let titleA = $(a).find('.title').text().toLowerCase(); 
@@ -341,11 +342,13 @@ $(document).ready(function() {
             return 0;
         });
 
+
         $tasksContainer.append($tasks);
+
 
         sortAsc = !sortAsc;
 
-        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
+        toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
     });
 });
 // 9.Önem derecesi butonu tıklama

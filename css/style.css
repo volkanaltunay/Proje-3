@@ -115,7 +115,7 @@ nav {
   position: absolute;
   top: 0;
   bottom: 0;
-  height: 100%-48px;
+  height: 100%;
   left: 0;
   background: #fff;
   width: 40px;
@@ -147,12 +147,6 @@ nav i{
     top: 12px;
     margin-left: 10px;
 }
-/* nav a:hover{
-    background: #eee;
-} */
-/* nav:hover{
-    transition: all 0.5s ease;
-} */
 .footer{
     /* margin-bottom: 48px; */
     gap: 20px;
@@ -206,7 +200,7 @@ nav i{
   transition: margin-left 0.3s ease;
 }
 #sidebar.collapsed + #content-area {
-  margin-left: 45px; /* Sidebar çöktüğünde boşluğu küçültün */
+  margin-left: 45px; 
 }
 /* İçerik alanı üst bar */
 #content-area {
@@ -214,7 +208,7 @@ nav i{
   flex-direction: column;
   padding: 0;
   background-color: #f3f2f1;
-  height: calc(100vh - 48px); /* Header hariç */
+  height: calc(100vh - 48px);
 }
 
 /* Üst kısım */
@@ -498,9 +492,9 @@ nav i{
 }
 
 .completed-title {
-    text-decoration: line-through; /* Üzerini çiz */
-    color: #2564cf; /* Rengi biraz soluklaştırarak vurguyu azalt */
+    text-decoration: line-through; 
+    color: #2564cf; 
 }
 .completed-task {
-  display: none; /* Bu sınıf eklenince görevler gizlenir */
+  display: none; 
 }

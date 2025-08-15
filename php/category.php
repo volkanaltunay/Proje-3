@@ -126,7 +126,7 @@ try {
 
         sortAsc = !sortAsc;
 
-        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
+        toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
     });
 });
 </script>

@@ -1,23 +1,30 @@
 <?php
 // myday.php
-// database.php dosyasını dahil et
-require 'database.php';
 
-// Veritabanı bağlantısını oluştur
+require 'database.php';
 $database = new Database();
 $db = $database->getConnection();
 
 // --- POST isteği geldiyse (ekleme işlemi) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['title'])) {
     $title = $_POST['title'];
+    $dueDate = isset($_POST['due_date']) && !empty($_POST['due_date']) ? $_POST['due_date'] : null;
+
     if (!empty($title)) {
         try {
-            $query = "INSERT INTO tasks (title) VALUES (:title)";
+            // due_date alanını da ekle
+            $query = "INSERT INTO tasks (title, due_date) VALUES (:title, :due_date)";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':title', $title);
+            if ($dueDate === null) {
+                $stmt->bindParam(':due_date', $dueDate, PDO::PARAM_NULL);
+            } else {
+                $stmt->bindParam(':due_date', $dueDate, PDO::PARAM_STR);
+            }
             $stmt->execute();
+            // Görev başarıyla eklendiğinde hiçbir şey yazdırmıyoruz ki Ajax success alsın
         } catch (PDOException $e) {
-            http_response_code(500); // Hata durum kodu gönder
+            http_response_code(500);
             die("Ekleme hatası: " . $e->getMessage());
         }
     }
@@ -26,7 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['title'])) {
 // --- Tüm görevleri (tasks) veritabanından çekme ---
 $tasks = [];
 try {
-    $query = "SELECT id, title, status, created_at FROM tasks WHERE deleted_at IS NULL ORDER BY created_at DESC";
+    // Sorguya due_date alanını da dahil et
+    $query = "SELECT id, title, status, importance, created_at, due_date FROM tasks WHERE deleted_at IS NULL ORDER BY created_at DESC";
     $stmt = $db->prepare($query);
     $stmt->execute();
     $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +81,7 @@ try {
             <div class="taskCreation">
                 <div class="taskCreation-entrybar-left">
                     <ul>
-                        <li><button><i class="fa-regular fa-calendar-days"></i></button></li>
+                        <li><button id="calendar-button"><i class="fa-regular fa-calendar-days"></i></button></li>
                         <li><button><i class="fa-regular fa-bell"></i></button></li>
                         <li><button><i class="fa-solid fa-repeat"></i></button></li>
                     </ul>
@@ -128,37 +136,52 @@ try {
 </section>
 
 <script>
-    $(document).ready(function() {
-        // Form gönderimini yakala
-        $('#taskForm').on('submit', function(e) {
-            e.preventDefault(); // Varsayılan form gönderimini engelle
-            
-            var form = $(this);
-            var url = form.attr('action');
-            var taskTitle = $('#task-input').val();
+$(document).ready(function() {
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000"
+    };
 
-            if (taskTitle.trim() === '') {
-                toastr.warning('Lütfen bir görev başlığı girin.');
-                return;
-            }
+    $('#taskForm').append('<input type="hidden" name="due_date" id="due-date-input">');
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(response) {
-                    toastr.success('Görev başarıyla eklendi!');
-                    $('#task-input').val('');
-                    
-                    // Görev listesini yeniden yükle
-                    $('#content-area').load('php/myday.php');
-                },
-                error: function(xhr, status, error) {
-                    toastr.error('Görev eklenirken bir hata oluştu: ' + error);
-                }
-            });
-        });
+    flatpickr("#calendar-button", {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates, dateStr, instance) {
+            $('#due-date-input').val(dateStr);
+            toastr.info('Görev için tarih belirlendi: ' + dateStr);
+        }
     });
+
+    $('#taskForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var form = $(this);
+        var url = form.attr('action');
+        var taskTitle = $('#task-input').val();
+
+        if (taskTitle.trim() === '') {
+            toastr.warning('Lütfen bir görev başlığı girin.');
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(),
+            success: function(response) {
+                toastr.success('Görev başarıyla eklendi!');
+                $('#task-input').val('');
+                $('#content-area').load('php/myday.php');
+            },
+            error: function(xhr, status, error) {
+                toastr.error('Görev eklenirken bir hata oluştu: ' + error);
+            }
+        });
+
+});
     $(document).ready(function() {
     let sortAsc = true; 
 
@@ -167,6 +190,7 @@ try {
         
         let $tasksContainer = $('.grid-tasks');
         let $tasks = $tasksContainer.children('.grid');
+
 
         $tasks.sort(function(a, b) {
             let titleA = $(a).find('.title').text().toLowerCase(); 
@@ -180,10 +204,12 @@ try {
 
         $tasksContainer.append($tasks);
 
+
         sortAsc = !sortAsc;
 
-        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
+        toastr.info(sortAsc ? 'Z-A sıralandı.' : 'A-Z sıralandı.');
     });
+});
 });
 
 </script>
