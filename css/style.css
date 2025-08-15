@@ -403,13 +403,6 @@ nav i{
   color: #323130;
 }
 
-/* Ekle butonu */
-/* .taskCreation-entrybar-right button {
-  background: #fff;
-  color: #444;
-  font-weight: 500;
-} */
-
 .taskCreation-entrybar-right button:hover {
   background: #1b4faf;
 }
@@ -528,4 +521,15 @@ nav i{
 }
 .completed-task {
   display: none; 
+}
+
+.grid-tasks.list-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid.list-item {
+    margin-bottom: 10px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }

@@ -404,4 +404,17 @@ $(document).ready(function() {
         });
     });
 });
+// 11. Liste ve Tablo Görünümü butonu olay yöneticileri
+
+$('button:has(.fa-bars-staggered)').on('click', function() {
+    $('.grid-tasks').addClass('list-view');
+    $('.grid').addClass('list-item');
+    toastr.info("Liste görünümüne geçildi.");
+});
+
+$('button:has(.fa-table-cells-large)').on('click', function() {
+    $('.grid-tasks').removeClass('list-view');
+    $('.grid').removeClass('list-item');
+    toastr.info("Tablo görünümüne geçildi.");
+});
 </script>
