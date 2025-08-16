@@ -326,7 +326,7 @@ $(document).ready(function() {
 
         $tasksContainer.append($tasks);
         sortAsc = !sortAsc;
-        toastr.info(sortAsc ? 'A-Z sıralandı.' : 'Z-A sıralandı.');
+        toastr.info(sortAsc ? 'Z-A sıralandı' : '.A-Z sıralandı.');
     });
 
     // 9. Önem derecesi
